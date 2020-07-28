@@ -1,15 +1,15 @@
 <template>
-<div></div>
+  <div></div>
 </template>
 <script>
 export default {
-components:{},
-data(){
-return {}
- },
- methods:{},
- mounted(){}
-}
+  components: {},
+  data() {
+    return {};
+  },
+  methods: {},
+  mounted() {}
+};
 </script>
 <style scoped>
 </style>

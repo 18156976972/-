@@ -27,6 +27,8 @@ import ElementUi from "element-ui"
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUi)
 
+// 7.图片的前缀
+Vue.prototype.$imgPre="http://localhost:3000"
 
 
 
