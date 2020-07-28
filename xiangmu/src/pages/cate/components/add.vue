@@ -134,7 +134,6 @@ export default {
         return
       }
 
-
       //file 是上传的文件
        var file = e.raw;
        //生成一个URL地址，赋值给imageUrl,展示出来

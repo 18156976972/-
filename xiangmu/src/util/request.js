@@ -238,3 +238,64 @@ export const requestSpecDelete = params => axios({
     method: "post",
     data: qs.stringify(params)
 })
+
+
+////////////////////////////////////////////////////////////////
+//商品添加
+export const requestGoodsAdd = (params) => {
+    let formData=new FormData()
+    for(let i in params){
+        formData.append(i,params[i])
+    }
+    return axios({
+        url: baseUrl + "/api/goodsadd",
+        method: "post",
+        data: formData
+    })
+}
+
+//商品总数
+export const requestGoodsCount=()=>{
+    return axios({
+        url:baseUrl+"/api/goodscount",
+        method:"get"
+    })
+}
+//商品列表
+export const requestGoodsList = (params) => {
+    return axios({
+        url: baseUrl + "/api/goodslist",
+        method: "get",
+        params: params
+    })
+}
+
+//商品某一个条数据
+export const requestGoodsDetail = params => {
+    return axios({
+        url: baseUrl + "/api/goodsinfo",
+        method: "get",
+        params
+    })
+}
+//商品修改
+export const requestGoodsUpdate = params => {
+    let formData=new FormData()
+    for(let i in params){
+        formData.append(i,params[i])
+    }
+    return axios({
+        url: baseUrl + "/api/goodsedit",
+        method: "post",
+        data: formData
+    })
+}
+
+//商品删除
+export const requestGoodsDelete = params => {
+    return axios({
+        url: baseUrl + "/api/goodsdelete",
+        method: "post",
+        data: qs.stringify(params)
+    })
+}

@@ -28,7 +28,7 @@ return {
  methods:{
      add(){
         this.info.show = true;
-      this.info.title = "添加管理员";
+      this.info.title = "商品规格添加";
       this.info.isAdd=true
      },
 

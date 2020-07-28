@@ -1,6 +1,6 @@
 <template>
   <div class="add">
-    <el-dialog title="管理员列表" :visible.sync="info.show">
+    <el-dialog :title="info.title" :visible.sync="info.show">
       <el-form :model="form">
         <el-form-item label="规格名称" label-width="80px">
           <el-input v-model="form.specsname" autocomplete="off"></el-input>
@@ -56,7 +56,9 @@ export default {
   },
   methods: {
     ...mapActions({
-      requestList: "spec/requestList",
+      
+       requestList: "spec/requestList",
+      requestTotal: "spec/requestTotal",
     }),
     addAttr() {
       this.attrArr.push({ value: "" });

@@ -31,12 +31,18 @@ const mutations={
 }
 const actions={
     //获取列表数据
-    requestList(context){
-        
-        const params={
-            page:context.state.page,//接收由list 页面，点击时得到的页码a
-            size:context.state.size
+    requestList(context,bool){
+        //调用这个action,如果要分页，就不用传参；如果要取所有的数据，就传递一个true
+        var params={}
+        if(bool){
+            params ={} //传空对象
+        }else{
+            params={
+                page:context.state.page,//接收由list 页面，点击时得到的页码a
+                size:context.state.size
+            }
         }
+
         requestSpecList(params).then(res=>{
             //没有取到数据
             if(res.data.list.length==0&&context.state.page>1){
