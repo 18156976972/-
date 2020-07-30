@@ -31,14 +31,14 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel()">取 消</el-button>
         <el-button type="primary" v-if="info.isAdd" @click="add">添 加</el-button>
-        <el-button type="primary" v-else>修 改</el-button>
+        <el-button type="primary" v-else @click="update">修 改</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
 import { successAlert, warningAlert } from "../../../util/alert";
-import { requestManageAdd, requestManageDetail } from "../../../util/request";
+import { requestManageAdd, requestManageDetail ,requestManageUpdate} from "../../../util/request";
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -100,7 +100,23 @@ export default {
         this.form = res.data.list;
         this.form.password = "";
       });
-    }
+    },
+
+    //点击了修改
+    update() {
+     
+      requestManageUpdate(this.form).then((res) => {
+        if (res.data.code == 200) {
+          successAlert("修改成功");
+          this.empty();
+          this.cancel();
+          this.requestManageList();
+        } else {
+          warningAlert(res.data.msg);
+        }
+      });
+    },
+
   },
   mounted() {
     if (this.roleList.length == 0) {

@@ -93,7 +93,8 @@ export default {
         "/spec",
         "/goods",
         "/banner",
-        "/seckill"
+        "/seckill",
+        '/member',
       ],
       //和后端给的值保持一致
       form: {

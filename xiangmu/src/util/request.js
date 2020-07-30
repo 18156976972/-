@@ -2,12 +2,38 @@
 import axios from "axios"
 import qs from "qs"
 
+import store from "../store"   //从仓库中取token值
+import {warningAlert} from "./alert"
+import router from "../router"   //js中跳路由，引入
+
 //响应拦截
 axios.interceptors.response.use(res=>{
     console.group("本次路径："+res.config.url)
     console.log(res)
+    // 掉线重新登录
+    if(res.data.msg==="登录已过期或访问权限受限"){
+        warningAlert("登录已过期或访问权限受限")
+        router.push("/login");
+        return;
+    }
+    
     return res;
 })
+
+//请求拦截  加一个token
+axios.interceptors.request.use(config => {
+    //authorization  是后端需要的字段
+    //config.headers 是请求数据时候得到的数
+    // config.url 进入页面的路由
+    //url: "/api/api/menulist"
+    if (config.url != baseUrl + '/api/userlogin') { //不是刚登录，，就去加token
+        config.headers.authorization = store.state.user.token;
+    }
+    return config
+})
+
+
+
 
 const baseUrl="/api"  
 //菜单添加
@@ -31,7 +57,7 @@ export const requestMenuList = (params) => {
 ////菜单某一个条数据(点编辑时  ， 让add  里面自动请求一条数据)
 export const requestMenuDetail = params => {
     return axios({
-        url: baseUrl+'/api/userinfo',
+        url: baseUrl+'/api/menuinfo',
         method: "get",
         params
     })
@@ -295,6 +321,147 @@ export const requestGoodsUpdate = params => {
 export const requestGoodsDelete = params => {
     return axios({
         url: baseUrl + "/api/goodsdelete",
+        method: "post",
+        data: qs.stringify(params)
+    })
+}
+/////////////////////////////
+//登录验证
+export const requestLogin=(params)=>{
+    return axios({
+        url:baseUrl+'/api/userlogin',
+        method:'post',
+        data:qs.stringify(params)
+    })
+}
+
+
+
+/////////////////////////////////
+
+
+
+//会员列表
+export const requestMemberList = () => {
+    return axios({
+        url: baseUrl + "/api/memberlist",
+        method: "get",
+    })
+}
+
+///获取某个会员的具体信息
+export const requestMemberDetail = params => {
+    return axios({
+        url: baseUrl + "/api/memberinfo",
+        method: "get",
+        params
+    })
+}
+//会员修改
+export const requestMemberUpdate = (params) => axios({
+    url: baseUrl + "/api/memberedit",
+    method: "post",
+    data: qs.stringify(params)
+})
+
+
+///////////////////////////////////////
+////1.轮播图添加
+
+export const requestBannerAdd = (params) => {
+    var formData=new FormData()
+    for(let i in params){
+        formData.append(i,params[i])
+    }
+    return axios({
+        url: baseUrl + "/api/banneradd",
+        method: "post",
+        data: formData
+    })
+}
+
+// 2分类列表
+export const requestBannerList =()=>{
+    return axios({
+        url:baseUrl+'/api/bannerlist',
+        method:'get',
+    })
+}
+//3分类某一个条数据
+export const requestBannerDetail = params => {
+    return axios({
+        url: baseUrl + "/api/bannerinfo",
+        method: "get",
+        params
+    })
+}
+
+//4分类修改
+export const requestBannerUpdate =(params)=>{
+    var formDtae = new FormData()
+    for(let i in params){
+        formDtae.append(i,params[i])
+    }
+    return axios({
+        url:baseUrl+'/api/banneredit',
+        method:'post',
+        data:formDtae
+    })
+}
+
+//分类删除
+export const requestBannerDelete = params => {
+    return axios({
+        url: baseUrl + "/api/bannerdelete",
+        method: "post",
+        data: qs.stringify(params)
+    })
+}
+
+
+/////////////////////////
+////1.秒杀活动添加
+
+export const requestSeckillDelete = params => {
+    return axios({
+        url: baseUrl + "/api/seckadd",
+        method: "post",
+        data: qs.stringify(params)
+    })
+}
+// 2.秒杀活动列表
+export const requestSeckillList =()=>{
+    return axios({
+        url:baseUrl+'/api/secklist',
+        method:'get',
+    })
+}
+//3秒杀活动某一个条数据
+export const requestSeckillDetail = params => {
+    return axios({
+        url: baseUrl + "/api/seckinfo",
+        method: "get",
+        params
+    })
+}
+
+//4秒杀活动修改
+export const requestSeckillUpdate =(params)=>{
+    var formDtae = new FormData()
+    for(let i in params){
+        formDtae.append(i,params[i])
+    }
+    return axios({
+        url:baseUrl+'/api/banneredit',
+        method:'post',
+        data:formDtae
+    })
+}
+
+//5秒杀活动删除
+export const requestSeckillDelete = params => {
+    return axios({
+        url: baseUrl + "/api/bannerdelete",
         method: "post",
         data: qs.stringify(params)
     })
