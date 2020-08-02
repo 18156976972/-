@@ -132,6 +132,10 @@ export default {
     },
     //点击了添加按钮
     add() {
+        if(this.form.title.length==0 || this.form.pid==0 || this.form.icon.length==0){
+           return   warningAlert('添加的内容不能留空');
+        }
+        
       requestMenuAdd(this.form).then((res) => {
         if (res.data.code == 200) {
           successAlert(res.data.msg);

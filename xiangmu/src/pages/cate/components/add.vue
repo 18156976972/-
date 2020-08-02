@@ -35,7 +35,7 @@
         </el-form-item>
         <!-- 5状态 -->
 
-        <el-form-item label="图片" label-width="80px">
+        <el-form-item label="状态" label-width="80px">
           <el-switch v-model="form.status" :active-value="1" :inactive-value="2"></el-switch>
           <!-- :active-value="1"  让它激活时 值为1   切是number类型-->
         </el-form-item>
@@ -53,7 +53,7 @@
 import {
   requestCateAdd,
   requestCateDetail,
-  requestcateUpdate
+  requestCateUpdate
 } from "../../../util/request";
 //引入弹出的成功框  ，  警告框
 import { successAlert, warningAlert } from "../../../util/alert";
@@ -105,6 +105,15 @@ export default {
     },
     //点击了添加按钮
     add() {
+       if(this.form.catename.length==0){
+           return   warningAlert('添加的内容不能留空');
+       }
+      if(this.form.pid !=0 &&( this.form.catename.length==0 || this.form.img==null )){
+           return   warningAlert('添加的内容不能留空');
+        }
+
+      
+     
       requestCateAdd(this.form).then(res => {
         if (res.data.code == 200) {
           successAlert(res.data.msg);
@@ -144,14 +153,15 @@ export default {
 
 
     getDetail(id) {
-      console.log(id);
-      requestCateDetail({ id: id }).then(res => {
-        this.form = res.data.list; //赋值给form
-        this.imageUrl =this.$imgPre+ res.data.list.img
+      requestCateDetail({ id: id }).then((res) => {
+        this.form = res.data.list;
+        this.form.id = id;
+        this.imageUrl = this.$imgPre + res.data.list.img;
       });
     },
 
     updata() {
+      
       requestCateUpdate(this.form).then(res => {
         //  console.log(this.form)
         if (res.data.code == 200) {

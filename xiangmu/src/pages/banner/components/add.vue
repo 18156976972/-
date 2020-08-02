@@ -71,6 +71,7 @@ export default {
 
     cancel() {
       this.info.show = false;
+      this.empty()
     },
 ///////////图片的改变事件
     changeImg(e) {
@@ -107,6 +108,10 @@ export default {
     },
 
     add() {
+         if(this.form.title.length==0 || this.form.img==null){
+           return   warningAlert('添加的内容不能留空');
+        }
+
         // this.form.img = this.imageUrl;
       requestBannerAdd(this.form).then(res => {
         if (res.data.code == 200) {
@@ -123,20 +128,11 @@ export default {
 
     getDetail(id) {
       //add的时候 attrs 用JSON.stringify 转字符串
-
       requestBannerDetail({ id: id }).then(res => {
         this.form = res.data.list;
         this.form.id = id;
         //图片地址
         this.imageUrl = this.$imgPre + this.form.img;
-
-        this.form.specsattr = JSON.parse(this.form.specsattr);
-        //二级分类是循环的数据，是根据一级分类发生改变而生效的，而一进页面一级分类，没发生改变，二级分类循环的数组就是空数组
-
-        //根据一级分类计算出二级分类的数组 ,穿个值，作为置空的判断  ,先要转化数组的数据类型，不然不出数据
-        this.changeFirstCateId(true);
-        //根据商品规格计算出商品属性
-        this.changeSpecsId(true);
       });
     },
     //创建编辑器
@@ -149,15 +145,12 @@ export default {
 
     //修改更新
     update() {
-       this.form.description=this.editor.txt.html();
-      this.form.specsattr=JSON.stringify(this.form.specsattr)
-
       requestBannerUpdate(this.form).then((res) => {
         if (res.data.code == 200) {
           successAlert("修改成功");
           this.empty();
           this.cancel();
-         this.requestGoodsList();
+         this.requestBannerList();
         } else {
           warningAlert(res.data.msg);
         }

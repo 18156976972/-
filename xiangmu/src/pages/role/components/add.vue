@@ -12,7 +12,7 @@
             :data="menuList"
             show-checkbox
             node-key="id"
-          :default-checked-keys="arr"
+            :default-checked-keys="arr"
             :props="defaultProps"
             ref="tree"
           ></el-tree>
@@ -24,14 +24,18 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel()">取 消</el-button>
         <el-button type="primary" @click="add" v-if="info.isAdd">添 加</el-button>
-         <el-button type="primary" @click="update" v-else>修 改</el-button>
+        <el-button type="primary" @click="update" v-else>修 改</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { requestRoleAdd, requestRoleDetail,requestRoleUpdate} from "../../../util/request";
+import {
+  requestRoleAdd,
+  requestRoleDetail,
+  requestRoleUpdate
+} from "../../../util/request";
 //引入弹出的成功框  ，  警告框
 import { successAlert, warningAlert } from "../../../util/alert";
 
@@ -55,7 +59,7 @@ export default {
         children: "children",
         label: "title" //这里是换值的
       },
-      arr:[3,4]
+      arr: []
     };
   },
   methods: {
@@ -65,10 +69,11 @@ export default {
     }),
     cancel() {
       this.info.show = false;
-       this.empty()
+      this.empty();
       //当点击list 里面的修改时，isAdd =false
     },
-    empty() {  //清空内容
+    empty() {
+      //清空内容
       this.form = {
         rolename: "",
         menus: "",
@@ -81,6 +86,15 @@ export default {
       //this.$refs.tree.getCheckedKeys()  选中的节点对应的key值 ，输出是一个数组
       // console.log(this.$refs.tree.getCheckedKeys())
       this.form.menus = JSON.stringify(this.$refs.tree.getCheckedKeys());
+
+      if (this.form.rolename.length == 0) {
+        console.log(this.form.menus);
+        return warningAlert("添加的内容不能留空");
+      }
+      if (this.form.menus.length == 2) {
+        return warningAlert("添加的内容不能留空");
+      }
+
       requestRoleAdd(this.form).then(res => {
         if (res.data.code == 200) {
           successAlert(res.data.msg);
@@ -95,28 +109,27 @@ export default {
         }
       });
     },
-    getDetail(id){
+    getDetail(id) {
       //   console.log(id)
-      requestRoleDetail({id:id}).then(res=>{
-          this.form = res.data.list
-          this.form.id = id;  // 没有id 补id
-          //因为要的是数组，而res.data.list.menus 角色权限，对应点击的key
-          this.arr =JSON.parse(res.data.list.menus)
-      })
+      requestRoleDetail({ id: id }).then(res => {
+        this.form = res.data.list;
+        this.form.id = id; // 没有id 补id
+        //因为要的是数组，而res.data.list.menus 角色权限，对应点击的key
+        this.arr = JSON.parse(res.data.list.menus);
+      });
     },
 
-    update(){
-         requestRoleUpdate(this.form).then(res=>{
-           if(res.data.code ==200){
-             successAlert(res.data.msg);
-             this.requestRoleList()
-             this.empty();
-             this.cancel();
-            
-           }else{
-             warningAlert(res.data.msg)
-           }
-         })
+    update() {
+      requestRoleUpdate(this.form).then(res => {
+        if (res.data.code == 200) {
+          successAlert(res.data.msg);
+          this.requestRoleList();
+          this.empty();
+          this.cancel();
+        } else {
+          warningAlert(res.data.msg);
+        }
+      });
     }
   },
   mounted() {

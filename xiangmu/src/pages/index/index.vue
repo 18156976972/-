@@ -23,47 +23,40 @@
           </el-menu-item>
           
           <!-- 有目录的循环 -->
-          <el-submenu v-show="hasChildren"  :index="item.id+''" v-for='item in user.menus' :key='item.id'>
+          <!-- <el-submenu v-show="hasChildren"  :index="item.id+''" v-for='item in user.menus' :key='item.id' >
+            <template slot="title">
+              <i :class="item.icon"></i>
+              <span>{{item.title}}</span>
+            </template>
+            <el-menu-item :index='i.url' v-for='i in item.children' :key='i.id'>{{i.title}}</el-menu-item>
+          </el-submenu> -->
+          <!-- 无目录的循环 -->
+          <!-- <el-menu-item  v-show="!hasChildren"  :index="i.url" v-for="(i) in user.menus" :key="i.title">
+            <span slot="title">{{i.title}}</span>
+          </el-menu-item> -->
+
+
+       
+
+        <!-- 目录和菜单混合 -->
+
+        <template v-for='item in user.menus'>
+            <!-- 目录，目录下有菜单 -->
+            <el-submenu v-if="item.children"  :index="item.id+''"  :key='item.id' >
             <template slot="title">
               <i :class="item.icon"></i>
               <span>{{item.title}}</span>
             </template>
             <el-menu-item :index='i.url' v-for='i in item.children' :key='i.id'>{{i.title}}</el-menu-item>
           </el-submenu>
-          <!-- 无目录的循环 -->
-          <el-menu-item  v-show="!hasChildren"  :index="i.url" v-for="(i) in user.menus" :key="i.title">
-            <span slot="title">{{i.title}}</span>
+         <!-- 只有菜单无目录 直接循环自己 -->
+          <el-menu-item  v-show="!item.children"  :index="item.url"  :key="item.title">
+            <span slot="title">{{item.title}}</span>
           </el-menu-item>
-          </el-menu>
-<!-- <el-menu-item index="/home">
-            <i class="el-icon-setting"></i>
-            <span slot="title">首页</span>
-          </el-menu-item>
-          <el-submenu index="1">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>系统设置</span>
-            </template>
-            <el-menu-item index="/menu">菜单管理</el-menu-item>
-            <el-menu-item index="/role">角色管理</el-menu-item>
-            <el-menu-item index="/manage">管理员管理</el-menu-item>
-          </el-submenu>
+        </template>
+          
 
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>商城管理</span>
-            </template>
-            <el-menu-item index="/cate">商品分类</el-menu-item>
-            <el-menu-item index="/spec">商品规格</el-menu-item>
-            <el-menu-item index="/goods">商品管理</el-menu-item>
-            <el-menu-item index="/member">会员管理</el-menu-item>
-            <el-menu-item index="/banner">轮播图管理</el-menu-item>
-            <el-menu-item index="/seckill">秒杀活动</el-menu-item>
-          </el-submenu>
-          </el-menu> -->
-        <!-- 中间 -->
-
+        </el-menu>
       </el-aside>
 
       <!-- 中间 -->
@@ -94,6 +87,7 @@ import {mapGetters,mapActions} from 'vuex'
 export default {
   computed:{
     ...mapGetters({
+      //user 是用户登录后获得的权限信息，即它有什么功能
       user:'user'
     }),
      //用来判断是否有目录,根据list (=user)的menu 下的第一页数组，有没有children,有就有目录
@@ -113,10 +107,12 @@ export default {
       this.changeUser(null) //退出信息清空
       this.$router.push('/login')
       sessionStorage.removeItem("user")
-    }
-
+    },
+    
   },
-  mounted() {}
+  mounted() {
+    // console.log(this.user)  
+  }
 };
 </script>
 <style scoped>

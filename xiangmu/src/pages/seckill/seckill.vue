@@ -20,7 +20,7 @@ data(){
 return {
     info:{
         show:false,
-        title:'轮播图添加',
+        title:'秒杀活动列表添加',
         isAdd:true
     }
 }
@@ -28,13 +28,13 @@ return {
  methods:{
      add(){
         this.info.show = true;
-      this.info.title = "轮播图添加";
+      this.info.title = "秒杀活动列表添加";
       this.info.isAdd=true
      },
 
      edit(id){
          this.info.show =true
-          this.info.title = "轮播图修改";
+          this.info.title = "秒杀活动列表修改";
          this.$refs.add.getDetail(id);
          this.info.isAdd=false
   

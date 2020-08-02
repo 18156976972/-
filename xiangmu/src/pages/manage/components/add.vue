@@ -68,6 +68,7 @@ export default {
     }),
     cancel() {
       this.info.show = false;
+      this.empty()
     },
     //置空
     empty() {
@@ -80,6 +81,10 @@ export default {
     },
 
     add() {
+
+       if(this.form.roleid.length==0 || this.form.username==0 || this.form.password.length==0){
+           return   warningAlert('添加的内容不能留空');
+        }
       //   this.form.roleid = Number(this.form.roleid);
       requestManageAdd(this.form).then(res => {
         if (res.data.code == 200) {

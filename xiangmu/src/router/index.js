@@ -2,13 +2,24 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from "../store/index"
 
+
+Vue.use(Router);
+
+const originalPush = Router.prototype.push
+   Router.prototype.push = function push(location) {
+   return originalPush.call(this, location).catch(err => err)
+}
+
+
+
+
 //懒加载
 const login =()=>import("../pages/login/login.vue")
 const index =()=>import("../pages/index/index.vue")
 
-Vue.use(Router)
 
-// 路由独享
+
+//////// 路由独享
 function havePower(url){
   return store.state.user.menus_url.some(i=>i==url) //对比取真假
 }
@@ -121,7 +132,7 @@ let router =new Router({
     }
   ]
 })
-//全局守卫
+/////////全局守卫
 router.beforeEach((to,from,next)=>{
   if(to.path=='/login'){
     next();
@@ -134,4 +145,3 @@ router.beforeEach((to,from,next)=>{
   next('/login')
 })
 export default router
-

@@ -31,6 +31,8 @@ Vue.use(ElementUi)
 Vue.prototype.$imgPre="http://localhost:3000"
 
 
+//路由
+
 
 
 //////////////////////                /////////////////////////////////

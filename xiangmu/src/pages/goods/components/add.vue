@@ -15,6 +15,7 @@
             <!-- 后端要分类编号所以value的值传的的id -->
           </el-select>
         </el-form-item>
+
         <el-form-item label="二级分类" label-width="80px">
           <el-select v-model="form.second_cateid">
             <el-option label="请选择" value disabled></el-option>
@@ -33,7 +34,11 @@
         </el-form-item>
         <!-- 价格 -->
         <el-form-item label="价格" label-width="80px">
-          <el-input v-model="form.price" autocomplete="off"></el-input>
+          <el-input
+            v-model="form.price"
+            autocomplete="off"
+            oninput="value=value.replace(/[^\d]/g,'')"
+          ></el-input>
         </el-form-item>
 
         <el-form-item label="市场价格" label-width="80px">
@@ -106,7 +111,11 @@
 </template>
 <script>
 import { successAlert, warningAlert } from "../../../util/alert";
-import { requestGoodsAdd, requestGoodsDetail,requestGoodsUpdate} from "../../../util/request";
+import {
+  requestGoodsAdd,
+  requestGoodsDetail,
+  requestGoodsUpdate
+} from "../../../util/request";
 
 import { mapGetters, mapActions } from "vuex";
 import E from "wangeditor";
@@ -124,6 +133,7 @@ export default {
   components: {},
   data() {
     return {
+      firstCateArr: {},
       //编辑器对象
       editor: null,
       //二级分类的数组
@@ -165,6 +175,9 @@ export default {
         //item.id 得到所有行的里面的id信息
         //this.form.first_cateid  点击选择后得到具体的某一条的id
       );
+
+      this.firstCateArr = this.cateList[index];
+      console.log(this.firstCateArr);
       //把选中行的children 子数组，复制给二级分类
       this.secondCateArr = this.cateList[index].children;
       //传了true,second_cateid就不置空；没传就置空
@@ -192,6 +205,7 @@ export default {
 
     cancel() {
       this.info.show = false;
+      this.empty();
     },
 
     changeImg(e) {
@@ -242,9 +256,41 @@ export default {
     },
 
     add() {
+      /* console.log(this.form.first_cateid)
+        console.log(this.form.second_cateid)
+        console.log(this.form.goodsname.length)
+        
+        console.log(this.form.price.length)
+        console.log(this.form.market_price.length)
+        console.log(this.form.img)
+        console.log(this.form.specsid)
+        console.log(this.form.specsattr.length)
+        console.log(this.form.description.length)
+        
+       console.log(this.form.first_cateid)
+        console.log(this.form.second_cateid)
+         console.log(this.form.specsid)
+        // console.log(this.form.description)
+      // console.log(this.form) */
+      this.form.description = this.editor.txt.html();
+
+      if (
+        this.form.first_cateid == null ||
+        this.form.second_cateid == null ||
+        this.form.goodsname.length == 0 ||
+        this.form.price.length == 0 ||
+        this.form.market_price.length == 0 ||
+        this.form.img == null ||
+        this.form.specsid == null ||
+        this.form.specsattr.length == 0 ||
+        this.form.description == null
+      ) {
+        return warningAlert("添加的内容不能留空");
+      }
+
       //this里面的变量都可以拿到
       // 这里要传description 参数的值
-      this.form.description = this.editor.txt.html();
+
       //specsattr 是多选，是个数组，要转成字符串
       this.form.specsattr = JSON.stringify(this.form.specsattr);
       //转换数据类型
@@ -285,26 +331,26 @@ export default {
     createEditor() {
       this.editor = new E("#desc");
       this.editor.create();
-      this.editor.txt.html(this.form.description);
+      this.editor.txt.html(this.form.description); ////
       //传description 值
     },
 
     //修改更新
     update() {
-       this.form.description=this.editor.txt.html();
-      this.form.specsattr=JSON.stringify(this.form.specsattr)
+      this.form.description = this.editor.txt.html();
+      this.form.specsattr = JSON.stringify(this.form.specsattr);
 
-      requestGoodsUpdate(this.form).then((res) => {
+      requestGoodsUpdate(this.form).then(res => {
         if (res.data.code == 200) {
           successAlert("修改成功");
           this.empty();
           this.cancel();
-         this.requestGoodsList();
+          this.requestGoodsList();
         } else {
           warningAlert(res.data.msg);
         }
       });
-    },
+    }
   },
   mounted() {
     if (this.cateList.length === 0) {

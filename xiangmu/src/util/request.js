@@ -213,6 +213,8 @@ export const requestCateUpdate =(params)=>{
     })
 }
 
+
+
 //分类删除
 export const requestCateDelete = params => {
     return axios({
@@ -422,7 +424,7 @@ export const requestBannerDelete = params => {
 /////////////////////////
 ////1.秒杀活动添加
 
-export const requestSeckillDelete = params => {
+export const requestSeckillAdd = params => {
     return axios({
         url: baseUrl + "/api/seckadd",
         method: "post",
@@ -446,22 +448,18 @@ export const requestSeckillDetail = params => {
 }
 
 //4秒杀活动修改
-export const requestSeckillUpdate =(params)=>{
-    var formDtae = new FormData()
-    for(let i in params){
-        formDtae.append(i,params[i])
-    }
+export const requestSeckillUpdate = params => {
     return axios({
-        url:baseUrl+'/api/banneredit',
-        method:'post',
-        data:formDtae
+        url: baseUrl + "/api/seckedit",
+        method: "post",
+        data: qs.stringify(params)
     })
 }
 
 //5秒杀活动删除
 export const requestSeckillDelete = params => {
     return axios({
-        url: baseUrl + "/api/bannerdelete",
+        url: baseUrl + "/api/seckdelete",
         method: "post",
         data: qs.stringify(params)
     })

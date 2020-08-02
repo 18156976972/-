@@ -1,17 +1,11 @@
 <template>
   <div>
     <el-table :data="list" border style="width: 100%">
-      <el-table-column prop="id" label="编号" width="180"></el-table-column>
-      <el-table-column prop="title" label="轮播图标题" width="180"></el-table-column>
-      <el-table-column  label="图片" width="180">
-          <template slot-scope="scope">
-           <img :src="$imgPre+scope.row.img" alt="">
-        </template>
-      </el-table-column>
-
+      <el-table-column prop="title" label="活动名称" width="180"></el-table-column>
+    
       <el-table-column label="状态" width="180">
         <template slot-scope="scope">
-          <el-button type="primary" v-if="scope.row.status==1">启 用</el-button>
+          <el-button type="success" v-if="scope.row.status==1">启 用</el-button>
           <el-button type="info" v-else>禁 用</el-button>
         </template>
       </el-table-column>
@@ -29,12 +23,12 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { successAlert, warningAlert } from "../../../util/alert";
-import { requestBannerDelete } from "../../../util/request";
+import { requestSeckillDelete } from "../../../util/request";
 
 export default {
   computed: {
     ...mapGetters({
-      list: "banner/list",
+      list: "seckill/list",
     })
   },
   components: {},
@@ -45,7 +39,7 @@ export default {
   },
   methods: {
     ...mapActions({
-     requestBannerList: "banner/requestList",
+     requestSeckillList: "seckill/requestList",
     }),
 
     edit(id){
@@ -53,11 +47,10 @@ export default {
     },
 
      del(id) {
-      requestBannerDelete({ id: id }).then((res) => {
+      requestSeckillDelete({ id: id }).then((res) => {
         if (res.data.code == 200) {
           successAlert("删除成功");
-          this.requestBannerList();
-          
+          this.requestSeckillList();
         } else {
           warningAlert(res.data.msg);
         }
@@ -65,7 +58,8 @@ export default {
     },
   },
   mounted() {
-    this.requestBannerList();
+    this.requestSeckillList();
+    return
   }
 };
 </script>

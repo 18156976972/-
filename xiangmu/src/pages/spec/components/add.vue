@@ -18,17 +18,17 @@
         </el-form-item>
       </el-form>
 
-      <div slot="footer" class="dialog-footer">
+     <div slot="footer" class="dialog-footer">
         <el-button @click="cancel()">取 消</el-button>
-        <el-button type="primary" v-if="info.isAdd" @click="add">添 加</el-button>
-        <el-button type="primary" v-else>修 改</el-button>
+        <el-button type="primary" @click="add" v-if="info.isAdd">添 加</el-button>
+        <el-button type="primary" @click="update" v-else>修 改</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
 import { successAlert, warningAlert } from "../../../util/alert";
-import { requestSpecAdd, requestSpecDetail } from "../../../util/request";
+import { requestSpecAdd, requestSpecDetail,requestSpecUpdate  } from "../../../util/request";
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -69,6 +69,7 @@ export default {
 
     cancel() {
       this.info.show = false;
+      this.empty()
     },
     //置空
     empty() {
@@ -85,6 +86,10 @@ export default {
     },
 
     add() {
+        if(this.form.specsname.length==0 ){
+           return   warningAlert('添加的内容不能留空');
+        }
+
         //判断数组不能为空
       if (this.attrArr.some(item => item.value == "")) {
         warningAlert("属性规格均不能为空");
@@ -92,6 +97,7 @@ export default {
       }
       //this.attrArr是的给一个小组，都是一个小的对象，我们只要value的值，不要key
       this.form.attrs = JSON.stringify(this.attrArr.map((item,index)=>{return item.value}));
+
       //转换数据类型
       requestSpecAdd(this.form).then(res => {
         if (res.data.code == 200) {
@@ -120,7 +126,26 @@ export default {
         }));
 
       });
-    }
+    },
+    //点击了修改
+    update() {
+       if (this.attrArr.some((item) => item.value == "")) {
+        warningAlert("属性规格均不能为空");
+        return;
+      }
+
+      this.form.attrs = JSON.stringify(this.attrArr.map((item) => item.value));
+      requestSpecUpdate(this.form).then((res) => {
+        if (res.data.code == 200) {
+          successAlert("修改成功");
+          this.empty();
+          this.cancel();
+          this.requestList();
+        } else {
+          warningAlert(res.data.msg);
+        }
+      });
+    },
   },
   mounted() {
     if (this.roleList.length == 0) {
